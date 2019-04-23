@@ -32,6 +32,11 @@ func todoReducer(action: Action, state: TodoState?) -> TodoState {
         let removedTodo = todosCopy.remove(at: action.fromIndexPath)
         todosCopy.insert(removedTodo, at: action.toIndexPath)
         state.todos = todosCopy
+    case let action as UpdateTodo:
+        guard let todo = action.todo else { break }
+        state.todos = state.todos.map { (savedTodo:Todo) -> Todo in 
+            return savedTodo.id == todo.id ? todo : savedTodo
+        }
     default:
         break
     }

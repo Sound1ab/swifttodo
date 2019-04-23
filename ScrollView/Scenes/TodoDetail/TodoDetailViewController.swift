@@ -20,10 +20,6 @@ class TodoDetailViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        setupTodo()
-    }
-    
-    func setupTodo() {
         guard let selectedTodo = selectedTodo else { return }
         textField.text = selectedTodo.description
     }
@@ -46,10 +42,10 @@ class TodoDetailViewController: UIViewController {
     func handleFinishEditing() {
         if selectedTodo != nil {
             let todo = createTodo(todo: selectedTodo)
-            Actions().updateTodo(todo)
+            updateTodo(todo)
         } else {
             let todo = createTodo(todo: nil)
-            Actions().addTodo(todo)
+            addTodo(todo)
         }
         self.dismiss(animated: true)
     }
@@ -67,8 +63,14 @@ extension TodoDetailViewController: UITextFieldDelegate {
 }
 
 extension TodoDetailViewController {
-    struct Actions {
-        let addTodo = {todo in store.dispatch(AddTodo(todo: todo))}
-        let updateTodo = { todo in store.dispatch(UpdateTodo(todo: todo)) }
+    var addTodo: (Todo?) -> () {
+        return { todo in
+            store.dispatch(AddTodo(todo: todo))
+        }
+    }
+    var updateTodo: (Todo?) -> () {
+        return { todo in
+            store.dispatch(UpdateTodo(todo: todo))
+        }
     }
 }
